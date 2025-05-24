@@ -1,0 +1,9 @@
+[default]
+app_name = "Live-Stream-Assistant"
+ffmpeg_path = "ffmpeg"
+
+[development]
+app_threads = 4
+
+[production]
+app_threads = 6

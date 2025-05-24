@@ -1,0 +1,15 @@
+[default]
+input_dir = "/Users/hunter/ShiningEnglish/DailyConversation"
+output_dir = "/Users/hunter/livestream/ShiningEnglish"
+combine_program_count = 10
+combine_topic_count = 3
+combine_material_count = 7
+rule = "1+3|2+5|4+6"
+
+[production]
+input_dir = "/home/hunter/ShiningEnglish/DailyConversation"
+output_dir = "/home/hunter/livestream/ShiningEnglish"
+combine_program_count = 10
+combine_topic_count = 3
+combine_material_count = 7
+rule = "1+3|2+5|4+6"
