@@ -12,6 +12,8 @@ def check_nvidia_support(ffmpeg_path: str) -> bool:
             timeout=5
         )
 
+        print(f"hwaccel_proc={hwaccel_proc}")
+
         # 检查编码器支持
         encoder_proc = subprocess.run(
             [ffmpeg_path, '-encoders'],
@@ -19,6 +21,7 @@ def check_nvidia_support(ffmpeg_path: str) -> bool:
             text=True,
             timeout=5
         )
+        print(f"encoder_proc={encoder_proc}")
 
         # 双重验证机制
         return ('cuda' in hwaccel_proc.stdout.lower()
