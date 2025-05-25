@@ -1,7 +1,5 @@
 import subprocess
 
-import subprocess
-
 
 def check_nvidia_support(ffmpeg_path: str) -> bool:
     """检测系统是否支持NVIDIA硬件加速（兼容VPS误报场景）"""
