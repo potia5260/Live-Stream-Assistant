@@ -30,9 +30,9 @@ def build_program_material_list(combine_rule_master_slave_dict: Dict[str, str], 
     """
     combine_program_material_list = []
 
-    combine_master_topic_list = []
-    combine_slave_topic_no_path_dict = {}
+    combine_topic_no_path_dict = {}
 
+    print(f"当前节目是{program_path.name},以下开始进行节目主题筛选")
     print(f"combine_rule_master_slave_dict:{combine_rule_master_slave_dict}")
     master_topic_no_list = list(combine_rule_master_slave_dict.keys())
     print(f"根据配置将以下序号的主题进行master随机列表生成操作:{master_topic_no_list[:]}")
@@ -42,7 +42,6 @@ def build_program_material_list(combine_rule_master_slave_dict: Dict[str, str], 
     program_combine_topic_no_dict = distill_program_combine_topic_no_dict(random_topic_no_list, combine_rule_master_slave_dict)
     print(f"以下序号的主题为需要合并->key为Master,value为Slave:{program_combine_topic_no_dict}")
     salve_topic_no_list = program_combine_topic_no_dict.values()
-    print("\n")
     # 获取需要合并的主题列表
     for entry in program_path.iterdir():
         if entry.is_dir():
@@ -51,25 +50,26 @@ def build_program_material_list(combine_rule_master_slave_dict: Dict[str, str], 
                 continue
             topic_no = distill_topic_no(entry)
             if topic_no in program_combine_topic_no_dict:
-                combine_master_topic_list.append(entry)
+                combine_topic_no_path_dict[topic_no] = entry
             elif topic_no in salve_topic_no_list:
-                combine_slave_topic_no_path_dict[topic_no] = entry
+                combine_topic_no_path_dict[topic_no] = entry
 
-    for combine_master_topic in combine_master_topic_list:
+    for random_topic_id in random_topic_no_list:
+        combine_master_topic = combine_topic_no_path_dict[random_topic_id]
         sorted_master_material_list = sorted(
             [f.name for f in combine_master_topic.iterdir() if f.is_file()],
             key=s.natural_sort_key
         )
-
         sorted_master_material_list_len = len(sorted_master_material_list)
         random_material_name_list = random.sample(sorted_master_material_list,
-                                             min(combine_material_count, sorted_master_material_list_len))
+                                                  min(combine_material_count, sorted_master_material_list_len))
         master_topic_no = distill_topic_no(combine_master_topic)
         slave_topic_no = program_combine_topic_no_dict[master_topic_no]
-        combine_slave_topic = combine_slave_topic_no_path_dict[slave_topic_no]
-        random_material_segment_list = build_combine_material_segment_list(combine_master_topic, combine_slave_topic, random_material_name_list)
+        combine_slave_topic = combine_topic_no_path_dict[slave_topic_no]
+        random_material_segment_list = build_combine_material_segment_list(combine_master_topic, combine_slave_topic,
+                                                                           random_material_name_list)
         combine_program_material_list.extend(random_material_segment_list)
-    print(f"当前节目{program_path.name}的合并素材列表为:{combine_program_material_list[:]}")
+    print(f"当前节目{program_path.name}的合并素材列表为:{combine_program_material_list[:]}\n")
     return combine_program_material_list
 
 
